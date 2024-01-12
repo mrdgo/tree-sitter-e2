@@ -1,0 +1,15 @@
+=====
+Multi-dimensional Array
+=====
+
+var foo: int[3][3];
+
+---
+
+(source_file
+    (variable_declaration
+        (identifier)
+        (array_type
+            (primitive_type)
+            (expression (number))
+            (expression (number)))))

@@ -1,0 +1,24 @@
+=====
+Function call
+=====
+
+func main()
+    return foo(1, 3);
+end
+
+---
+
+(source_file
+    (function_definition
+        (identifier)
+        (parameter_list)
+        (block
+            (statement
+                (return_statement
+                    (expression
+                        (function_call
+                            (identifier)
+                            (arguments
+                                (expression (number))
+                                (arguments
+                                    (expression (number)))))))))))

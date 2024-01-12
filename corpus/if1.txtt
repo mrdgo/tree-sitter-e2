@@ -1,0 +1,58 @@
+=====
+Simple if branch
+=====
+
+func print(): int
+    var k : int;
+    var d : int;
+
+    k := 0;
+    if k < 8 then
+        d := writeInt(1);
+    end
+    return 0;
+end
+
+---
+
+(source_file
+    (function_definition
+        (identifier)
+        (parameter_list)
+        (primitive_type)
+        (block
+            (variable_declaration
+                (identifier)
+                (primitive_type))
+            (variable_declaration
+                (identifier)
+                (primitive_type))
+            (statement
+                (assignment
+                    (identifier)
+                    (expression (number))))
+            (statement
+                (if
+                    (expression
+                        (binary_expression
+                            (expression (identifier))
+                            (expression (number))))
+                    (block
+                        (statement
+                            (assignment
+                                (identifier)
+                                (expression
+                                    (function_call
+                                        (identifier)
+                                        (arguments
+                                        (expression
+                                        (number)))))
+                        )
+                        )
+                    )
+                )
+            )
+            (statement
+                (return_statement
+                    (expression
+                        (number)))))))

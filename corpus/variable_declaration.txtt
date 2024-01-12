@@ -1,0 +1,12 @@
+=====
+Test standalone variable declaration
+=====
+
+var foo: int;
+
+---
+
+(source_file
+    (variable_declaration
+        (identifier)
+        (primitive_type)))

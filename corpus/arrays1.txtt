@@ -1,0 +1,14 @@
+=====
+Array
+=====
+
+var foo: int[3];
+
+---
+
+(source_file
+    (variable_declaration
+        (identifier)
+        (array_type
+            (primitive_type)
+            (expression (number)))))

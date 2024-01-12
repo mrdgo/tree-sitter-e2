@@ -1,0 +1,37 @@
+=====
+Function with declaration and binary expression
+=====
+
+func main(): real
+    var foo: real;
+
+    foo := (42 - 13) / 4;
+
+    return foo;
+end
+
+---
+
+(source_file
+    (function_definition
+        (identifier)
+        (parameter_list)
+        (primitive_type)
+        (block
+            (variable_declaration
+                (identifier)
+                (primitive_type))
+            (statement
+                (assignment
+                    (identifier)
+                    (expression
+                        (binary_expression
+                            (expression
+                                (binary_expression
+                                    (expression (number))
+                                    (expression (number))))
+                            (expression (number))))))
+            (statement
+                (return_statement
+                    (expression
+                        (identifier)))))))

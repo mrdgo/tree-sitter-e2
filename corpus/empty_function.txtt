@@ -1,0 +1,20 @@
+=====
+Test empty function main
+=====
+
+func main(): int
+    return 0;
+end
+
+---
+
+(source_file
+    (function_definition
+        (identifier)
+        (parameter_list)
+        (primitive_type)
+        (block
+            (statement
+                (return_statement
+                    (expression
+                        (number)))))))

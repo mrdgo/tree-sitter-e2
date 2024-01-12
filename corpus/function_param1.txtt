@@ -1,0 +1,27 @@
+=====
+Function with parameters
+=====
+
+func main(foo: int, bar: int): int
+    return 0;
+end
+
+---
+
+(source_file
+    (function_definition
+        (identifier)
+        (parameter_list
+            (parameters
+                (parameter
+                    (identifier)
+                    (primitive_type))
+                (parameters
+                    (parameter
+                        (identifier)
+                        (primitive_type)))))
+        (primitive_type)
+        (block
+            (statement
+                (return_statement
+                    (expression (number)))))))

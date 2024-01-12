@@ -1,0 +1,21 @@
+=====
+Array access
+=====
+
+func main()
+    return foo[0];
+end
+
+---
+
+(source_file
+    (function_definition
+        (identifier)
+        (parameter_list)
+        (block
+            (statement (return_statement
+                (expression (array_access (identifier) (expression (number)))))
+            )
+        )
+    )
+)

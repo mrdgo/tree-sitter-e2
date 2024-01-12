@@ -1,0 +1,25 @@
+=====
+Function with declaration
+=====
+
+func main(): int
+    var foo: int;
+
+    return 0;
+end
+
+---
+
+(source_file
+    (function_definition
+        (identifier)
+        (parameter_list)
+        (primitive_type)
+        (block
+            (variable_declaration
+                (identifier)
+                (primitive_type))
+            (statement
+                (return_statement
+                    (expression
+                        (number)))))))

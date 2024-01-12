@@ -1,0 +1,30 @@
+=====
+arithmetic_expression 1
+=====
+
+func main(): int
+    return (42 / 7) - 1 * 2 + 2 as int;
+end
+
+---
+(source_file
+    (function_definition
+        (identifier)
+        (parameter_list)
+        (primitive_type)
+        (block
+            (statement
+                (return_statement
+                    (expression
+                        (type_cast
+                            (expression
+                                (binary_expression
+                                    (expression (binary_expression
+                                        (expression (binary_expression
+                                            (expression (number))
+                                            (expression (number))))
+                                        (expression (binary_expression
+                                            (expression (number))
+                                            (expression (number))))))
+                                    (expression (number))))
+                            (primitive_type))))))))
