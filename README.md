@@ -39,7 +39,7 @@ There are several options - I did it like so:
 ```sh
 mkdir /usr/share/nvim/runtime/queries/e2
 wget https://raw.githubusercontent.com/mrdgo/tree-sitter-e2/main/highlights.scm
-mv highlights /usr/share/nvim/runtime/queries/e2
+mv highlights.scm /usr/share/nvim/runtime/queries/e2
 ```
 
 Now, if you open a `.e2` file, it should be highlighted.
