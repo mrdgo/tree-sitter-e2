@@ -1,5 +1,5 @@
 =====
-Simple if branch with else
+Simple if branch
 =====
 
 func print(): int
@@ -9,8 +9,6 @@ func print(): int
     k := 0;
     if k < 8 then
         d := writeInt(1);
-    else
-        d := 15;
     end
     return 0;
 end
@@ -47,13 +45,14 @@ end
                                     (function_call
                                         (identifier)
                                         (arguments
+                                        (argument
                                         (expression
-                                        (number))))))))
-                    (block
-                        (statement
-                            (assignment
-                                (identifier)
-                                (expression (number)))))))
+                                        (number))))))
+                        )
+                        )
+                    )
+                )
+            )
             (statement
                 (return_statement
                     (expression

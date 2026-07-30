@@ -19,7 +19,14 @@ const PREC = {
 
 module.exports = grammar({
     name: "e2",
+
+    extras: ($) => [
+      /\s/,
+      $.comment,
+    ],
+
     rules: {
+
         source_file: $ => repeat($._definition),
 
         _definition: $ => choice(
@@ -75,10 +82,10 @@ module.exports = grammar({
 
         statement: $ => choice(
             $.while,
-            $.return_statement,
+            seq($.return_statement, ";"),
             $.if,
-            $.function_call,
-            $.assignment,
+            seq($.function_call, ";"),
+            seq($.assignment, ";"),
         ),
 
         while: $ => seq(
@@ -112,12 +119,11 @@ module.exports = grammar({
             $.array_access,
         ),
 
-        identifier: $ => /[a-zA-Z][a-zA-Z0-9]*/,
+        identifier: $ => /[a-zA-Z][_a-zA-Z0-9]*/,
 
         return_statement: $ => prec(1, seq(
             "return",
             $.expression,
-            ";"
         )),
 
         number: $ => /[0-9]+(\.[0-9]*)?/,
@@ -136,9 +142,11 @@ module.exports = grammar({
         ),
 
         arguments: $ => seq(
-            $.expression,
-            optional(seq(",", $.arguments))
+            $.argument,
+            optional(repeat1(seq(",", $.argument)))
         ),
+
+        argument: $ => seq($.expression),
 
 
         binary_expression: $ => choice(
@@ -178,7 +186,9 @@ module.exports = grammar({
             choice($.identifier, $.array_access),
             ":=",
             $.expression,
-            ";"
         )),
+
+
+        comment: ($) => token(seq("#", /[^\n]*/)),
     }
 })

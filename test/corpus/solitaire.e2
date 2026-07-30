@@ -1,0 +1,446 @@
+# 0 = North
+# 1 = West
+# 2 = East
+# 3 = South
+
+var count: int;
+var hashcolls: int;
+
+func main(): int
+    var i:int;
+    i := 0;
+    calculatelegalmoves(initboard(), 0);
+    if solve(initboard(), 0) == 1 then
+        while i < 32 do
+            printboard(solution[i]);
+            i := i + 1;
+        end
+    end
+
+    writeChar(104); # h
+    writeChar(97);  # a
+    writeChar(115); # s
+    writeChar(104); # h
+    writeChar(32);  #
+    writeChar(99);  # c
+    writeChar(111); # o
+    writeChar(108); # l
+    writeChar(108); # l
+    writeChar(105); # i
+    writeChar(115); # s
+    writeChar(105); # i
+    writeChar(111); # o
+    writeChar(110); # n
+    writeChar(115); # s
+    writeChar(58);  # :
+    writeChar(32);  #
+
+    writeInt(hashcolls);
+    writeChar(10);
+
+    writeChar(116);
+    writeChar(101);
+    writeChar(115);
+    writeChar(116);
+    writeChar(101);
+    writeChar(100);
+    writeChar(58);
+    writeChar(32);
+
+    writeInt(count);
+    writeChar(10);
+
+end
+
+
+# generate initial board constellation
+func initboard(): int
+    var b: int;
+    b := emptyboard();
+    b := bitor(b, lshift(7, 2));
+    b := bitor(b, lshift(7, 8 + 2));
+    b := bitor(b, lshift(127, 2 * 8));
+    b := bitor(b, lshift(119, 3 * 8));
+    b := bitor(b, lshift(127, 4 * 8));
+    b := bitor(b, lshift(7, 5 * 8 + 2));
+    b := bitor(b, lshift(7, 6 * 8 + 2));
+    return b;
+end
+
+
+func boardmask(): int
+    var b: int;
+    b := emptyboard();
+    b := bitor(b, lshift(7, 2));
+    b := bitor(b, lshift(7, 8 + 2));
+    b := bitor(b, lshift(127, 2 * 8));
+    b := bitor(b, lshift(127, 3 * 8));
+    b := bitor(b, lshift(127, 4 * 8));
+    b := bitor(b, lshift(7, 5 * 8 + 2));
+    b := bitor(b, lshift(7, 6 * 8 + 2));
+    return b;
+end
+
+
+# generate empty board
+func emptyboard(): int
+    return 0;
+end
+
+
+# recursive solver
+var solution: int[32];
+var legalmoveslens: int[32];
+func solve(board: int, depth: int): int
+    var len: int;
+    count := count + 1;
+    solution[depth] := board;
+    if depth == 31 then
+        return 1;
+    end
+    # already seen this constellation
+    if visitedinsert(board) == 0 then
+        return 0;
+    end
+    len := calculatelegalmoves(board, depth);
+    legalmoveslens[depth] := len;
+    bubblesort(depth);
+    while len > 0 do
+        len := len - 1;
+        if solve(legalmoves[depth][len], depth + 1) == 1 then
+            return 1;
+        end
+    end
+    return 0;
+end
+
+
+# visited array
+var visited: int[1000];
+
+func visitedinsert(b: int): int
+    var h: int;
+    var i: int;
+
+    h := hash(b);
+    if h < 0 then
+        h := (0 - 1) * h;
+    end
+    i := mod(h, 1000);
+    if visited[i] == b then
+        return 0;
+    else
+        if visited[i] != 0 then
+            hashcolls := hashcolls + 1;
+        end
+        visited[i] := b;
+        return 1;
+    end
+end
+
+
+var legalmoves: int[32][33 * 4];
+func calculatelegalmoves(board: int, depth: int): int
+    var i: int;
+    var y: int;
+    var x: int;
+    var idx: int;
+    var mask: int;
+    var dir: int;
+
+    i := 0;
+    while i < 33 * 4 do
+        legalmoves[depth][i] := 0;
+        i := i + 1;
+    end
+
+    i := 0;
+    dir := 0;
+    while dir < 4 do
+        mask := movepatternmask(board, dir);
+        while mask != 0 do
+            idx := trailingzeros(mask);
+            mask := bitand(mask, mask - 1);
+            legalmoves[depth][i] := moveunchecked(board, idx, dir);
+            i := i + 1;
+        end
+        dir := dir + 1;
+    end
+    return i;
+end
+
+func bubblesort(depth: int): int
+    var changed: int;
+    var i: int;
+    var tmp: int;
+    changed := 1;
+
+    while changed == 1 do
+        changed := 0;
+        i := 0;
+        while i < legalmoveslens[depth] - 1 do
+            if legalmoves[depth][i] > legalmoves[depth][i + 1] then
+                tmp := legalmoves[depth][i];
+                legalmoves[depth][i] := legalmoves[depth][i + 1];
+                legalmoves[depth][i + 1] := tmp;
+            end
+            i := i + 1;
+        end
+    end
+end
+
+
+func movepatternmask(board: int, dir: int): int
+    return bitand(
+        bitand(board, movablepositions(dir)),
+        bitand(
+            dirshift(board, dir, 1),
+            bitnot(dirshift(board, dir, 2))
+        )
+    );
+end
+
+
+func dirshift(board: int, dir: int, count: int): int
+    # north
+    if dir == 0 then
+        return lshift(board, count * 8);
+    end
+    # west
+    if dir == 1 then
+        return lshift(board, count);
+    end
+    # east
+    if dir == 2 then
+        return rshift(board, count);
+    end
+    # south
+    if dir == 3 then
+        return rshift(board, count * 8);
+    end
+end
+
+
+func movablepositions(dir: int): int
+    # north
+    if dir == 0 then
+        return 7912631605919744;
+    end
+    # west
+    if dir == 1 then
+        return 4521726477864976;
+    end
+    # east
+    if dir == 2 then
+        return 1130431619466244;
+    end
+    # south
+    if dir == 3 then
+        return 120737176604;
+    end
+end
+
+
+func directionmask(idx: int, dir: int): int
+    if dir == 0 then
+        return lshift(65793, idx - 2 * 8);
+    end
+    if dir == 1 then
+        return lshift(7, idx - 2);
+    end
+    if dir == 2 then
+        return lshift(7, idx);
+    end
+    if dir == 3 then
+        return lshift(65793, idx);
+    end
+end
+
+func moveunchecked(board: int, idx: int, dir: int): int
+    return xor(board, directionmask(idx, dir));
+end
+
+func trailingzeros(n: int): int
+    var count: int;
+    count := 0;
+    while n > 0 and isodd(n) == 0 do
+        n := n / 2;
+        count := count + 1;
+    end
+    return count;
+end
+
+func isodd(n: int): int
+    if n / 2 * 2 == n then
+        return 0;
+    else
+        return 1;
+    end
+end
+
+
+func mod(a: int, b: int): int
+    return a - a / b * b;
+end
+
+
+func lshift(a: int, b: int): int
+    while b > 0 do
+        a := a * 2;
+        b := b - 1;
+    end
+    return a;
+end
+
+
+func rshift(a: int, b: int): int
+    while b > 0 do
+        a := a / 2;
+        b := b - 1;
+    end
+    return a;
+end
+
+
+func bitand(a: int, b: int): int
+    var res: int;
+    var i: int;
+    var pos: int;
+    res := 0;
+    i := 0;
+    pos := 1;
+    while i < 64 do
+        if isodd(a) == 1 and isodd(b) == 1 then
+            res := res + pos;
+        end
+        a := rshift(a, 1);
+        b := rshift(b, 1);
+        i := i + 1;
+        pos := pos * 2;
+    end
+    return res;
+end
+
+
+func bitor(a: int, b: int): int
+    var res: int;
+    var i: int;
+    var pos: int;
+    res := 0;
+    i := 0;
+    pos := 1;
+    while i < 64 do
+        if isodd(a) == 1 or isodd(b) == 1 then
+            res := res + pos;
+        end
+        a := rshift(a, 1);
+        b := rshift(b, 1);
+        i := i + 1;
+        pos := pos * 2;
+    end
+    return res;
+end
+
+
+func bitnot(n: int): int
+    return 0 - n - 1 + 9223372036854775808;
+end
+
+
+func xor(a: int, b: int): int
+    var res: int;
+    var i: int;
+    var pos: int;
+    res := 0;
+    i := 0;
+    pos := 1;
+    while i < 64 do
+        if isodd(a) == 1 and isodd(b) == 0 or isodd(a) == 0 and isodd(b) == 1 then
+            res := res + pos;
+        end
+        a := rshift(a, 1);
+        b := rshift(b, 1);
+        i := i + 1;
+        pos := pos * 2;
+    end
+    return res;
+end
+
+
+func hash(board: int): int
+    var a: int;
+    var b: int;
+    a := xor(board,             2611923443488327891);
+    b := xor(rshift(board, 32), 1376283091369227076);
+    return mulu64mix(a, b);
+end
+
+func mulu64mix(a: int, b: int): int
+    var mask: int;
+    var a_lo: int;
+    var a_hi: int;
+    var b_lo: int;
+    var b_hi: int;
+    var p0: int;
+    var p1: int;
+    var p2: int;
+    var p3: int;
+    var middle: int;
+    var low: int;
+    var high: int;
+
+    mask := 4294967295; # 0xffff_ffff
+
+    a_lo := bitand(a, mask);
+    a_hi := rshift(a, 32);
+    b_lo := bitand(b, mask);
+    b_hi := rshift(b, 32);
+
+    p0 := a_lo * b_lo; # 64-bit
+    p1 := a_lo * b_hi; # 64-bit
+    p2 := a_hi * b_lo; # 64-bit
+    p3 := a_hi * b_hi; # 64-bit
+
+    # Combine carefully with carries
+
+    # Middle 64-bit value (before shifting)
+    middle := rshift(p0, 32) + bitand(p1, mask) + bitand(p2, mask);
+
+    low := bitor(bitand(p0, mask), lshift(middle, 32));
+    high := p3 + rshift(p1, 32) + rshift(p2, 32) + rshift(middle, 32);
+
+    return xor(low, high);
+end
+
+
+func printboard(b: int)
+    var x: int;
+    var y: int;
+    var idx: int;
+    var mask: int;
+    x := 0;
+    y := 0;
+    mask := boardmask();
+    while y < 8 do
+        x := 0;
+        while x < 8 do
+            idx := y * 8 + x;
+            if bitand(mask, lshift(1, idx)) != 0 then
+                if isodd(rshift(b, idx)) == 1 then
+                    writeChar(79);
+                    writeChar(32);
+                else
+                    writeChar(46);
+                    writeChar(32);
+                end
+            else
+                writeChar(32);
+                writeChar(32);
+            end
+            x := x + 1;
+        end
+        writeChar(10);
+        y := y + 1;
+    end
+    writeChar(10);
+end

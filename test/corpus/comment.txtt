@@ -1,0 +1,23 @@
+=====
+Comments
+=====
+
+# Comment
+func main()
+    return foo[0][1];
+end
+
+---
+
+(source_file
+    (comment)
+    (function_definition
+        (identifier)
+        (parameter_list)
+        (block
+            (statement (return_statement
+                (expression
+                    (array_access
+                        (identifier)
+                        (expression (number))
+                        (expression (number)))))))))

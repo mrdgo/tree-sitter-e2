@@ -1,0 +1,51 @@
+=====
+Function call with function call as arg
+=====
+
+func main(): int
+    var i_one:int;
+    i_one := 0;
+    calculatelegalmoves(initboard(), 0);
+end
+
+---
+
+
+(source_file
+    (function_definition
+        (identifier)
+        (parameter_list)
+        (primitive_type)
+        (block
+            (variable_declaration
+                (identifier)
+                (primitive_type)
+            )
+            (statement
+                (assignment
+                    (identifier)
+                    (expression
+                        (number)
+                    )
+                )
+            )
+            (statement
+                (function_call
+                    (identifier)
+                    (arguments
+                        (argument
+                            (expression
+                                (function_call
+                                    (identifier)
+                                )
+                            )
+                        )
+                        (argument
+                            (expression
+                                (number)))
+                    )
+                )
+            )
+        )
+    )
+)

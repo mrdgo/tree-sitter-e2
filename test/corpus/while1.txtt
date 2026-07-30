@@ -1,5 +1,5 @@
 =====
-Simple if branch
+Simple while loop
 =====
 
 func print(): int
@@ -7,7 +7,7 @@ func print(): int
     var d : int;
 
     k := 0;
-    if k < 8 then
+    while k < 8 do
         d := writeInt(1);
     end
     return 0;
@@ -32,7 +32,7 @@ end
                     (identifier)
                     (expression (number))))
             (statement
-                (if
+                (while
                     (expression
                         (binary_expression
                             (expression (identifier))
@@ -45,8 +45,9 @@ end
                                     (function_call
                                         (identifier)
                                         (arguments
+                                        (argument
                                         (expression
-                                        (number)))))
+                                        (number))))))
                         )
                         )
                     )
